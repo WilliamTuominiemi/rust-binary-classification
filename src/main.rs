@@ -1,3 +1,5 @@
+use rand::Rng;
+
 fn sigmoid(z: f32) -> f32 {
     1.0 / (1.0 + (-z).exp())
 }
@@ -37,7 +39,42 @@ fn update_weights(
     (updated_w1, updated_w2, updated_b)
 }
 
+fn initialize_weights() -> (f32, f32, f32) {
+    let mut rng = rand::rng();
+    let w1: f32 = rng.random_range(-0.5..0.5);
+    let w2: f32 = rng.random_range(-0.5..0.5);
+    let b: f32 = rng.random_range(-0.5..0.5);
+
+    (w1, w2, b)
+}
+
+fn train(X: Vec<(f32, f32)>, Y: Vec<f32>, epochs: i32, learning_rate: f32) -> (f32, f32, f32) {
+    let mut w1;
+    let mut w2;
+    let mut b;
+
+    (w1, w2, b) = initialize_weights();
+
+    let zipped: Vec<((f32, f32), f32)> = X.iter().cloned().zip(Y.iter().cloned()).collect();
+
+    for epoch in 0..epochs {
+        println!("epoch {}", epoch + 1);
+
+        for ((x1, x2), y_true) in &zipped {
+            let y_pred = forward_pass(w1, *x1, w2, *x2, b);
+            let (new_w1, new_w2, new_b) =
+                update_weights(w1, *x1, b, w2, *x2, *y_true, y_pred, learning_rate);
+            w1 = new_w1;
+            w2 = new_w2;
+            b = new_b;
+        }
+    }
+
+    (w1, w2, b)
+}
+
 fn main() {
-    let (w1, w2, b) = update_weights(0.6, 0.8, 0.6, 0.8, 0.6, 0.8, 0.6, 0.8);
-    println!("{w1}, {w2}, {b}");
+    let X: Vec<(f32, f32)> = vec![(1.0, 1.0)];
+    let Y: Vec<f32> = vec![1.0];
+    println!("{:?}", train(X, Y, 10, 0.25));
 }
