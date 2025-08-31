@@ -18,9 +18,9 @@ fn forward_pass(w1: f32, x1: f32, w2: f32, x2: f32, b: f32) -> f32 {
 // direction of the gradient to reduce the error.
 fn update_weights(
     w1: f32,
-    x1: f32,
-    b: f32,
     w2: f32,
+    b: f32,
+    x1: f32,
     x2: f32,
     y_true: f32,
     y_pred: f32,
@@ -65,7 +65,7 @@ fn train(x: Vec<(f32, f32)>, y: Vec<f32>, epochs: i32, learning_rate: f32) -> (f
         for ((x1, x2), y_true) in &zipped {
             let y_pred: f32 = forward_pass(w1, *x1, w2, *x2, b);
             let (new_w1, new_w2, new_b) =
-                update_weights(w1, *x1, b, w2, *x2, *y_true, y_pred, learning_rate);
+                update_weights(w1, w2, b, *x1, *x2, *y_true, y_pred, learning_rate);
             w1 = new_w1;
             w2 = new_w2;
             b = new_b;
@@ -81,7 +81,6 @@ fn predict(x: Vec<(f32, f32)>, y: Vec<f32>, w1: f32, w2: f32, b: f32) {
         let prediction: f32 = forward_pass(w1, *x1, w2, *x2, b);
         println!("Prediction: {} | True: {}", prediction, y[index]);
     }
-    return;
 }
 
 fn main() {
