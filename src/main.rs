@@ -5,15 +5,15 @@ fn sigmoid(z: f32) -> f32 {
 }
 
 fn forward_pass(w1: f32, x1: f32, w2: f32, x2: f32, b: f32) -> f32 {
-    let z = w1 * x1 + w2 * x2 + b;
-    let a = sigmoid(z);
+    let z: f32 = w1 * x1 + w2 * x2 + b;
+    let a: f32 = sigmoid(z);
     a
 }
 
 fn compute_loss(y_true: f32, y_pred: f32) -> f32 {
-    let epsilon = f32::powf(10.0, -12.0);
-    let a = y_pred.clamp(epsilon, 1.0 - epsilon);
-    let loss = -(y_true * a.ln() + (1.0 - y_true) * (1.0 - a).ln());
+    let epsilon: f32 = f32::powf(10.0, -12.0);
+    let a: f32 = y_pred.clamp(epsilon, 1.0 - epsilon);
+    let loss: f32 = -(y_true * a.ln() + (1.0 - y_true) * (1.0 - a).ln());
     loss
 }
 
@@ -27,14 +27,14 @@ fn update_weights(
     y_pred: f32,
     learning_rate: f32,
 ) -> (f32, f32, f32) {
-    let error = y_pred - y_true;
-    let dw1 = error * x1;
-    let dw2 = error * x2;
-    let db = error;
+    let error: f32 = y_pred - y_true;
+    let dw1: f32 = error * x1;
+    let dw2: f32 = error * x2;
+    let db: f32 = error;
 
-    let updated_w1 = w1 - learning_rate * dw1;
-    let updated_w2 = w2 - learning_rate * dw2;
-    let updated_b = b - learning_rate * db;
+    let updated_w1: f32 = w1 - learning_rate * dw1;
+    let updated_w2: f32 = w2 - learning_rate * dw2;
+    let updated_b: f32 = b - learning_rate * db;
 
     (updated_w1, updated_w2, updated_b)
 }
@@ -49,9 +49,9 @@ fn initialize_weights() -> (f32, f32, f32) {
 }
 
 fn train(x: Vec<(f32, f32)>, y: Vec<f32>, epochs: i32, learning_rate: f32) -> (f32, f32, f32) {
-    let mut w1;
-    let mut w2;
-    let mut b;
+    let mut w1: f32;
+    let mut w2: f32;
+    let mut b: f32;
 
     (w1, w2, b) = initialize_weights();
 
@@ -61,7 +61,7 @@ fn train(x: Vec<(f32, f32)>, y: Vec<f32>, epochs: i32, learning_rate: f32) -> (f
         println!("epoch: {}", epoch + 1);
 
         for ((x1, x2), y_true) in &zipped {
-            let y_pred = forward_pass(w1, *x1, w2, *x2, b);
+            let y_pred: f32 = forward_pass(w1, *x1, w2, *x2, b);
             let (new_w1, new_w2, new_b) =
                 update_weights(w1, *x1, b, w2, *x2, *y_true, y_pred, learning_rate);
             w1 = new_w1;
