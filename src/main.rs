@@ -48,17 +48,17 @@ fn initialize_weights() -> (f32, f32, f32) {
     (w1, w2, b)
 }
 
-fn train(X: Vec<(f32, f32)>, Y: Vec<f32>, epochs: i32, learning_rate: f32) -> (f32, f32, f32) {
+fn train(x: Vec<(f32, f32)>, y: Vec<f32>, epochs: i32, learning_rate: f32) -> (f32, f32, f32) {
     let mut w1;
     let mut w2;
     let mut b;
 
     (w1, w2, b) = initialize_weights();
 
-    let zipped: Vec<((f32, f32), f32)> = X.iter().cloned().zip(Y.iter().cloned()).collect();
+    let zipped: Vec<((f32, f32), f32)> = x.iter().cloned().zip(y.iter().cloned()).collect();
 
     for epoch in 0..epochs {
-        println!("epoch {}", epoch + 1);
+        println!("epoch: {}", epoch + 1);
 
         for ((x1, x2), y_true) in &zipped {
             let y_pred = forward_pass(w1, *x1, w2, *x2, b);
@@ -73,8 +73,19 @@ fn train(X: Vec<(f32, f32)>, Y: Vec<f32>, epochs: i32, learning_rate: f32) -> (f
     (w1, w2, b)
 }
 
+fn predict(x: Vec<(f32, f32)>, y: Vec<f32>, w1: f32, w2: f32, b: f32) {
+    for (index, (x1, x2)) in x.iter().enumerate() {
+        let prediction: f32 = forward_pass(w1, *x1, w2, *x2, b);
+        println!("Prediction: {} | True: {}", prediction, y[index]);
+    }
+    return;
+}
+
 fn main() {
-    let X: Vec<(f32, f32)> = vec![(1.0, 1.0)];
-    let Y: Vec<f32> = vec![1.0];
-    println!("{:?}", train(X, Y, 10, 0.25));
+    let x: Vec<(f32, f32)> = vec![(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)];
+    let y: Vec<f32> = vec![0.0, 0.0, 0.0, 1.0];
+
+    let (w1, w2, b) = train(x.clone(), y.clone(), 500, 0.25);
+
+    predict(x.clone(), y.clone(), w1, w2, b);
 }
