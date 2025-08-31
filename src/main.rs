@@ -10,13 +10,6 @@ fn forward_pass(w1: f32, x1: f32, w2: f32, x2: f32, b: f32) -> f32 {
     a
 }
 
-fn compute_loss(y_true: f32, y_pred: f32) -> f32 {
-    let epsilon: f32 = f32::powf(10.0, -12.0);
-    let a: f32 = y_pred.clamp(epsilon, 1.0 - epsilon);
-    let loss: f32 = -(y_true * a.ln() + (1.0 - y_true) * (1.0 - a).ln());
-    loss
-}
-
 fn update_weights(
     w1: f32,
     x1: f32,
